@@ -1,0 +1,52 @@
+---
+- name: Install runtime dependencies
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - git
+    - perl-Config-IniFiles
+    - perl-Data-Dumper
+    - perl-capture-tiny
+    - pv
+    - lzop
+    - mbuffer
+    - mhash
+
+- name: Clone sanoid
+  git:
+    repo: "https://github.com/jimsalterjrs/sanoid"
+    dest: /tmp/ansible-role-sanoid/sanoid
+    force: true
+    version: "v{{ sanoid_git_tag }}"
+  changed_when: false
+  become: false
+
+- name: Create symlink to debian in repo root dir
+  copy:
+    src: /tmp/ansible-role-sanoid/sanoid/packages/debian
+    dest: /tmp/ansible-role-sanoid/sanoid/debian
+    state: link
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - sanoid
+    - syncoid
+    - findoid
+    - sleepymutex
+
+
+
+- name: kernel-devel installed if using zfs-dkms (RedHat)
+  yum:
+    name: kernel-devel
+    state: latest
+  when: zfs_dkms_el_enabled == 1
+
+- name: ZFS installed (RedHat)
+  yum:
+    name: zfs
+    state: latest
+  notify: zfs_installed
+...
