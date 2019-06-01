@@ -1,1 +1,21 @@
- 
+# {{ ansible_managed }}
+
+{% for dataset in sanoid_datasets %}
+[{{ dataset.name }}]
+{% for key, value in dataset.config.items() %}
+        {{ key }} = {{ value }}
+{% endfor %}
+
+{% endfor %}
+
+#############################
+# templates below this line #
+#############################
+
+{% for template in sanoid_templates %}
+[template_{{ template.name }}]
+{% for key, value in template.config.items() %}
+        {{ key }} = {{ value }}
+{% endfor %}
+
+{% endfor %}

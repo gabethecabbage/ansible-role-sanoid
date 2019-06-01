@@ -1,0 +1,18 @@
+---
+rhel_depends:
+  - perl-Config-IniFiles
+  - perl-Data-Dumper
+  - perl-capture-tiny
+  - pv
+  - lzop
+  - mbuffer
+  - mhash
+
+debian_depends:
+  - libcapture-tiny-perl
+  - libconfig-inifiles-perl
+  - pv
+  - lzop
+  - mbuffer
+
+sanoid_tmp_dir: /tmp/sanoid_ansible

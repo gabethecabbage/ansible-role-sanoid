@@ -1,6 +1,24 @@
 ---
-- import_tasks: rhel.yml
-  when: ansible_os_family == "RedHat"
+- name: Clone sanoid
+  git:
+    repo: "https://github.com/jimsalterjrs/sanoid"
+    dest: "{{ sanoid_tmp_dir }}"
+    force: true
+    version: "v{{ sanoid_git_tag }}"
+  changed_when: false
+  become: false
+  delegate_to: localhost
 
-- import_tasks: debian.yml
-  when: ansible_os_family == "Debian"
+- import_tasks: install.yml
+  tags: install
+
+- import_tasks: config.yml
+  tags: config
+
+- name: Delete temp sanoid repo
+  file:
+    path: "{{ sanoid_tmp_dir }}"
+    state: absent
+  changed_when: false
+  become: false
+  delegate_to: localhost

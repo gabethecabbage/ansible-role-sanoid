@@ -1,0 +1,18 @@
+---
+- name: Create the config directory
+  file:
+    dest: /etc/sanoid
+    state: directory
+    mode: "0755"
+
+- name: Copy default config
+  copy:
+    src: "{{ sanoid_tmp_dir }}/sanoid.defaults.conf"
+    dest: /etc/sanoid/sanoid.defaults.conf
+    mode: "0644"
+
+- name: Template config file
+  template:
+    src: sanoid.conf.j2
+    dest: /etc/sanoid/sanoid.conf
+    mode: "0644"

@@ -1,0 +1,15 @@
+---
+- name: Systemd daemon reload
+  systemd:
+    daemon_reload: yes
+
+- name: Enable sanoid-prune.service
+  systemd:
+    name: sanoid-prune.service
+    enabled: true
+
+- name: Restart sanoid.timer
+  systemd:
+    name: sanoid.timer
+    state: started
+    enabled: true

@@ -1,0 +1,52 @@
+---
+- name: Install RHEL runtime dependencies
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    "{{ rhel_depends }}"
+  when: ansible_os_family == "RedHat"
+
+- name: Install Debian runtime dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    "{{ debian_depends }}"
+  when: ansible_os_family == "Debian"
+
+- name: Copy the executables
+  copy:
+    src: "{{ sanoid_tmp_dir }}/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    mode: "0755"
+  loop:
+    - sanoid
+    - syncoid
+    - findoid
+    - sleepymutex
+
+- name: Copy sanoid-prune service
+  copy:
+    src: "{{ sanoid_tmp_dir }}/packages/debian/sanoid-prune.service"
+    dest: "/etc/systemd/system/sanoid-prune.service"
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+   - Systemd daemon reload
+   - Enable sanoid-prune.service
+
+- name: Copy sanoid timer and service
+  copy:
+    src: "{{ sanoid_tmp_dir }}/packages/debian/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - sanoid.service
+    - sanoid.timer
+  notify:
+   - Systemd daemon reload
+   - Restart sanoid.timer
