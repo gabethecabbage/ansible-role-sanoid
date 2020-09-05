@@ -62,6 +62,8 @@ sanoid_templates:
       autoprune: yes
 ```
 
+Defaults to providing a ```dailies```, ```hourlies``` and ```weeklies``` schedule (see ```defaults/main.yml``` for details).
+
 ## Dependnecies
 
 None
